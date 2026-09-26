@@ -29,7 +29,7 @@
             padding: 25px;
             margin-bottom: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         button {
@@ -44,6 +44,13 @@
 
         button:hover {
             background-color: #163a5c;
+        }
+
+        input {
+            padding: 10px;
+            width: 250px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -71,6 +78,26 @@
             <button>Deposit Money</button>
             <button>Withdraw Money</button>
             <button>Transfer Money</button>
+        </div>
+
+        <div class="card">
+            <h2>Transfer Money</h2>
+
+            <label>Beneficiary Account Number:</label>
+            <br><br>
+
+            <input type="text" placeholder="Enter account number">
+
+            <br><br>
+
+            <label>Amount:</label>
+            <br><br>
+
+            <input type="number" placeholder="Enter amount">
+
+            <br><br>
+
+            <button>Transfer</button>
         </div>
 
         <div class="card">
