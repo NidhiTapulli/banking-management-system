@@ -1,0 +1,99 @@
+name: Banking Management System CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v6
+
+      - name: Build application
+        run: |
+          mkdir -p build
+          cp index.html build/index.html
+          echo "Banking Management System build completed successfully."
+
+      - name: Verify build
+        run: |
+          test -f build/index.html
+          echo "Build verification successful."
+
+  test:
+    name: Test Application
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v6
+
+      - name: Test HTML file
+        run: |
+          test -f index.html
+          grep -q "Banking Management System" index.html
+          grep -q "Account Balance" index.html
+          grep -q "Transfer Money" index.html
+          echo "All application tests passed."
+
+  package:
+    name: Package Application
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v6
+
+      - name: Create package
+        run: |
+          mkdir banking-management-system
+          cp index.html banking-management-system/
+          zip -r banking-management-system.zip banking-management-system
+          echo "Application packaged successfully."
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: banking-management-system-package
+          path: banking-management-system.zip
+
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+    needs: package
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v6
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
